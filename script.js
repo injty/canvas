@@ -1,13 +1,8 @@
 window.addEventListener('load', function () {
-
 	const canvases = document.querySelectorAll('canvas')
-
-
-
 // all canvases
 	canvases.forEach(canvas => {
 		const c = canvas.getContext('2d')
-
 		// square
 		class Square {
 			constructor ({position, velocity }) {
@@ -15,23 +10,18 @@ window.addEventListener('load', function () {
 				this.velocity = velocity
 				this.height = 20
 			}
-
 			draw() {
 				c.fillStyle = '#34ab98'
 				c.fillRect(this.position.x, this.position.y, 20, this.height)
 			}
-
 			update() {
 				this.draw()
 				this.position.y += this.velocity.y
-
 				if (this.position.y + this.height + this.velocity.y >= canvas.height) {
 					this.velocity.y = 0
 				}
 			}
-
 		}
-
 
 		canvas.width = 120
 		canvas.height = 70
