@@ -5,7 +5,6 @@ window.addEventListener('load', function () {
 	canvases.forEach(canvas => {
 
 		// variable
-		let lastKey
 		const c = canvas.getContext('2d')
 		const gravity = 0.5
 
@@ -42,14 +41,30 @@ window.addEventListener('load', function () {
 			constructor ({position, velocity, color }) {
 				this.position = position
 				this.velocity = velocity
-				this.height = 20
+				this.width = 20
+				this.height = 30
 				this.lastKey
+				this.attackBox = {
+					position: this.position,
+					width: 30,
+					height: 5,
+				}
 				this.color = color
 			}
 
 		draw() {
 			c.fillStyle = this.color
-			c.fillRect(this.position.x, this.position.y, 20, this.height)
+			c.fillRect(this.position.x, this.position.y, this.width, this.height)
+
+			// attack box
+			c.fillStyle = 'yellow'
+			c.fillRect(
+				this.attackBox.position.x,
+				this.attackBox.position.y,
+				this.attackBox.width,
+				this.attackBox.height
+			)
+
 		}
 
 		update() {
@@ -101,12 +116,10 @@ window.addEventListener('load', function () {
 			// player movement
 			player.velocity.x = 0
 
-			if (keys.a.pressed && lastKey === 'a') {
+			if (keys.a.pressed && player.lastKey === 'a') {
 				player.velocity.x = -3
-			} else if (keys.d.pressed && lastKey === 'd') {
+			} else if (keys.d.pressed && player.lastKey === 'd') 	{
 				player.velocity.x = 3
-			} else if (keys.w.pressed && lastKey === 'w') {
-				player.velocity.y = 3
 			}
 
 			// enemy movement
@@ -116,8 +129,14 @@ window.addEventListener('load', function () {
 				enemy.velocity.x = -3
 			} else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
 				enemy.velocity.x = 3
-			} else if (keys.ArrowUp.pressed && enemy.lastKey === 'ArrowUp') {
-				enemy.velocity.y = 3
+			}
+
+			// detect for collision
+			if (
+				player.attackBox.position.x + player.attackBox.width >= enemy.position.x
+				&& player.attackBox.position.x <= enemy.position.x + enemy.width
+				) {
+				console.log('attack')
 			}
 		}
 
@@ -127,11 +146,11 @@ window.addEventListener('load', function () {
 			switch (event.key) {
 				case 'd':
 					keys.d.pressed = true
-					lastKey = 'd'
+					player.lastKey = 'd'
 				break
 				case 'a':
 					keys.a.pressed = true
-					lastKey = 'a'
+					player.lastKey = 'a'
 				break
 				case 'w':
 					player.velocity.y = -10
